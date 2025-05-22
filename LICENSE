@@ -1,7 +1,162 @@
-Copyright (c) GitHub, Inc.
+<! DOCTYPE html>
+<html lang="pt-BR">
+<cabeça>
+ <meta charset="UTF-8"> 
+ = visualização" conteúdo="largura de dispositivo, escala inicial=1.0"> 
+ <título>Nosso Caça-Palavras</título> 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff6f91, #ff9671);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 15px;
+    }
+    .hearts {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    td {
+      width: 8vw;
+      height: 8vw;
+      max-width: 35px;
+      max-height: 35px;
+      border: 1px solid #fff;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: rgba(255,255,255,0.2);
+      font-size: 4vw;
+      user-select: none;
+    }
+    td.selected {
+      background-color: #fff;
+      color: #ff6f91;
+      font-weight: bold;
+    }
+    .word-list {
+      margin-top: 15px;
+      font-size: 1em;
+      line-height: 1.5;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <h1>Nosso Caça-Palavras</h1>
+  <div class="hearts">❤️💖💕💘💝</div>
+  <table id="wordsearch"></table>
+  <div class="word-list" id="foundWords">
+    <strong>Palavras:</strong><br>
+    amor, infinitamente, farofa, terror, desenho, esmalte, novela, pãozinho, abelhinha, sun, moon, Harry Potter, Up Altas Aventuras, felicidade, evolução, força
+  </div>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4870d7aa98.mp3"></audio>
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  <canvas id="confettiCanvas"></canvas>
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  <script>
+    const words = ['AMOR','INFINITAMENTE','FAROFA','TERROR','DESENHO','ESMALTE','NOVELA','PÃOZINHO','ABELHINHA','SUN','MOON','HARRYPOTTER','UPALTASAVENTURAS','FELICIDADE','EVOLUÇÃO','FORÇA'];
+    const gridSize = 15;
+    const table = document.getElementById('wordsearch');
+    const foundWords = new Set();
+    const clickSound = document.getElementById('clickSound');
+    let grid = Array(gridSize).fill().map(()=>Array(gridSize).fill(''));
+
+    function playSound() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    function placeWord(word) {
+      const dir = Math.random() > 0.5 ? 1 : -1;
+      const vertical = Math.random() > 0.5;
+      let placed = false;
+      while (!placed) {
+        let row = Math.floor(Math.random() * gridSize);
+        let col = Math.floor(Math.random() * gridSize);
+        let fits = true;
+        for (let i = 0; i < word.length; i++) {
+          let r = row + (vertical ? i * dir : 0);
+          let c = col + (!vertical ? i * dir : 0);
+          if (r < 0 || r >= gridSize || c < 0 || c >= gridSize || (grid[r][c] && grid[r][c] !== word[i])) {
+            fits = false;
+            break;
+          }
+        }
+        if (fits) {
+          for (let i = 0; i < word.length; i++) {
+            let r = row + (vertical ? i * dir : 0);
+            let c = col + (!vertical ? i * dir : 0);
+            grid[r][c] = word[i];
+          }
+          placed = true;
+        }
+      }
+    }
+
+ palavras. Em cada um(w => placeWord(w. toUpperCase())); 
+
+    for (let r = 0; r < gridSize; r++) {
+      for (let c = 0; c < gridSize; c++) {
+        if (!grid[r][c]) {
+          grid[r][c] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        }
+      }
+    }
+
+    for (let r = 0; r < gridSize; r++) {
+      const row = document.createElement('tr');
+      for (let c = 0; c < gridSize; c++) {
+        const cell = document.createElement('td');
+ célula. Conteúdo = grelha[r][c]; 
+ celular, conjunto de dados. carta = grelha[r][c]; 
+ cell. AddEventListener('click', () => { 
+ celular. Lista de clandestinos('selecionados'); 
+ playSound(); 
+ verificação (conclusão) 
+                    });            
+ fila. appendCriança(célula); 
+      }
+ mesa. appendCriança(fila); 
+    }
+
+ função de verificação de verificação() { 
+ conste selectedLetters = [... documento. querySelectorAll(. selecionado)]. mapa(td => td. Conteúdo). Junte('); 
+ palavras. Por cada uma(palavra => { 
+ se (selectedLetters. inclui(palavra) & ! FundWords. tem(palavra) { 
+ Palavras de foundidades. Adicione(palavra); 
+        }
+                                                       });                                                 
+ se (palavras de base. tamanho >= palavras. comprimento) { 
+ Confetti(); 
+      }
+    }
+
+ // efeito confetti 
+ tela de conste = documento. getElementById('confettiCanvas'); 
+ conste x = tela. getContexto('2d'); 
+ tela. largura = janela. IntnerWith; 
+ tela. altura = janela. Alteza; 
+
+ deixar confetes = []; 
+
+ função de lançamento Confetti() {
